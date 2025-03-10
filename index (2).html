@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thyroxine Dose Calculator</title>
+    <script>
+        function roundDose(dose) {
+            if (dose < 100) {
+                return Math.ceil(dose / 12.5) * 12.5;
+            } else {
+                return Math.ceil(dose / 25) * 25;
+            }
+        }
+
+        function calculateDose() {
+            let height = parseFloat(document.getElementById("height").value);
+            let weight = parseFloat(document.getElementById("weight").value);
+            let tsh = parseFloat(document.getElementById("tsh").value);
+            let existingDose = parseFloat(document.getElementById("existingDose").value);
+            let isOnThyroxine = document.getElementById("isOnThyroxine").checked;
+            
+            if (isOnThyroxine && tsh < 5) {
+                document.getElementById("result").innerText = "Recommended Thyroxine Dose: " + existingDose + " mcg (No change)";
+                return;
+            }
+            
+            if (isOnThyroxine && tsh >= 5) {
+                document.getElementById("complianceQuestions").style.display = "block";
+                return;
+            }
+            
+            let baseValue = Math.max(height - 100, weight);
+            let baseDose = baseValue * 1.6;
+            let dose;
+            
+            if (tsh > 15) {
+                dose = baseDose;
+            } else if (tsh >= 10 && tsh <= 15) {
+                dose = (2 / 3) * baseDose;
+            } else {
+                dose = (1 / 3) * baseDose;
+            }
+            
+            dose = roundDose(dose);
+            document.getElementById("result").innerText = "Recommended Thyroxine Dose: " + dose + " mcg";
+        }
+    </script>
+</head>
+<body>
+    <h2>Thyroxine Dose Calculator</h2>
+    <label for="height">Height (cm):</label>
+    <input type="number" id="height" required>
+    <br><br>
+    <label for="weight">Weight (kg):</label>
+    <input type="number" id="weight" required>
+    <br><br>
+    <label for="tsh">TSH Value (mIU/ml):</label>
+    <input type="number" id="tsh" step="0.1" required>
+    <br><br>
+    <label for="isOnThyroxine">Already on Thyroxine:</label>
+    <input type="checkbox" id="isOnThyroxine">
+    <br><br>
+    <label for="existingDose">Current Thyroxine Dose (mcg):</label>
+    <input type="number" id="existingDose" required>
+    <br><br>
+    <button onclick="calculateDose()">Calculate Dose</button>
+    <h3 id="result"></h3>
+    
+    <div id="complianceQuestions" style="display: none;">
+        <h3>Compliance Check</h3>
+        <label for="gapTime">Gap between tablet and morning tea (minutes):</label>
+        <input type="number" id="gapTime">
+        <br><br>
+        <label for="calciumIntake">Calcium intake (Yes/No):</label>
+        <input type="text" id="calciumIntake">
+        <br><br>
+        <label for="ironIntake">Iron intake (Yes/No):</label>
+        <input type="text" id="ironIntake">
+        <br><br>
+        <label for="ppiIntake">PPI intake (Yes/No):</label>
+        <input type="text" id="ppiIntake">
+    </div>
+</body>
+</html>
+
+
